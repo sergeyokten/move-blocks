@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script src="/webjars/jquery/jquery.min.js"></script>
+        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+        <style>
+
+            .div {
+                width: 200px;
+                height: 200px;
+                position: absolute;
+
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <!--hello choose your color and set name-->
+        <h1>your status is <span id="status"></span></h1>
+        <div id="inputs">
+            <input type="text" name="name" placeholder="name" id="name">
+            <input type="text" name="color" placeholder="color" id="color">
+            <button id="sendValues">send values</button>
+        </div>
+
+
+    </body>
+    <script>
+
+        let stompClient = null;
+
+        function connect() {
+            let sockJS = new SockJS('/socketName');
+            stompClient = Stomp.over(sockJS);
+            stompClient.connect({}, function (farme) {
+                document.getElementById('status').innerText = 'connected';
+                stompClient.subscribe('/chanelName/output', function (data) {
+
+
+                })
+
+            })
+        }
+
+        setTimeout(connect, 1500);
+
+
+        document.getElementById('sendValues').onclick = function () {
+            stompClient.send('/allowDestinationPrefix/msg', {}, JSON.stringify({
+                name: $("#name").val(),
+                color: $("#color").val()
+            }));
+            createBlock($("#color").val());
+        };
+
+        function createBlock(color) {
+            let div = document.createElement('div');
+            div.classList.add('div');
+            div.style.background = color;
+            div.style.top = Math.round(Math.random() * 600) + 'px';
+            document.body.appendChild(div);
+            $("#sendValues").attr('disabled',true);
+        }
+
+    </script>
+</html>
