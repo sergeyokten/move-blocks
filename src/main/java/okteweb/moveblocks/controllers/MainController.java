@@ -10,8 +10,9 @@ public class MainController {
 
     @MessageMapping("/msg") // /allowDestinationPrefix/msg
     @SendTo("/chanelName/output")
-    public void greeting(InputModel inputModel) throws Exception {
+    public OutputModel greeting(InputModel inputModel) throws Exception {
         System.out.println(inputModel);
+        return new OutputModel(inputModel);
     }
 
 

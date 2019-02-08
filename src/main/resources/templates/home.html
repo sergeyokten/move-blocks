@@ -23,11 +23,12 @@
 
 
         <!--hello choose your color and set name-->
-        <h1>your status is <span id="status"></span></h1>
-        <div id="inputs">
-            <input type="text" name="name" placeholder="name" id="name">
-            <input type="text" name="color" placeholder="color" id="color">
-            <button id="sendValues">send values</button>
+        <div class="wrap"><h1>your status is <span id="status"></span></h1>
+            <div id="inputs">
+                <input type="text" name="name" placeholder="name" id="name">
+                <input type="text" name="color" placeholder="color" id="color">
+                <button id="sendValues">send values</button>
+            </div>
         </div>
 
 
@@ -42,6 +43,11 @@
             stompClient.connect({}, function (farme) {
                 document.getElementById('status').innerText = 'connected';
                 stompClient.subscribe('/chanelName/output', function (data) {
+                    console.log(data);
+
+                    let color = JSON.parse(data.body).color;
+                    console.log(color);
+                    createBlock(color);
 
 
                 })
@@ -57,7 +63,7 @@
                 name: $("#name").val(),
                 color: $("#color").val()
             }));
-            createBlock($("#color").val());
+
         };
 
         function createBlock(color) {
@@ -66,7 +72,8 @@
             div.style.background = color;
             div.style.top = Math.round(Math.random() * 600) + 'px';
             document.body.appendChild(div);
-            $("#sendValues").attr('disabled',true);
+            // $("#sendValues").attr('disabled', true);
+            $(".wrap").css('display', 'none');
         }
 
     </script>
